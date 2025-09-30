@@ -9,14 +9,6 @@ const PORT = process.env.PORT || 3000;
 // Middleware to parse incoming JSON data in the request body
 app.use(express.json());
 
-// Error handling middleware for malformed JSON
-app.use((err, req, res, next) => {
-    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
-        return res.status(400).json({ error: 'Invalid JSON format in request body' });
-    }
-    next();
-});
-
 // In-memory array to simulate data storage
 let memes = [
     { id: 1, title: "Distracted Boyfriend", image_url: "https://i.imgur.com/example1.jpg", user_id: "system" },
@@ -34,6 +26,23 @@ app.get('/', (req, res) => {
 app.get("/memes", (req, res) => {
     // Return the current contents of the memes array
     res.json(memes);
+});
+
+// GET /memes/:id → return a single meme by ID
+app.get("/memes/:id", (req, res) => {
+    // Extract the id parameter from the URL
+    const { id } = req.params;
+    
+    // Find the meme with the matching ID (convert string to number)
+    const meme = memes.find((m) => m.id === parseInt(id));
+    
+    // If meme not found, return 404 error
+    if (!meme) {
+        return res.status(404).json({ error: "Meme not found" });
+    }
+    
+    // Return the found meme
+    res.json(meme);
 });
 
 // POST /memes → add a meme to the local array
@@ -63,6 +72,13 @@ app.post("/memes", (req, res) => {
     res.status(201).json(newMeme);
 });
 
+// Error handling middleware for malformed JSON (moved to end)
+app.use((err, req, res, next) => {
+    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+        return res.status(400).json({ error: 'Invalid JSON format in request body' });
+    }
+    next();
+});
 
 // --- SERVER START ---
 

@@ -6,6 +6,11 @@
   node_bundler = "esbuild"
 
 [[redirects]]
+  from = "/api/memes/:id"
+  to = "/.netlify/functions/memes-id?id=:id"
+  status = 200
+
+[[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
