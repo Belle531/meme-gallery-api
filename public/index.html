@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Gallery API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .method {
+            font-weight: bold;
+            color: #007bff;
+        }
+        code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎭 Meme Gallery API</h1>
+        <p><strong>By Cassandra Moore</strong></p>
+        
+        <h2>Available Endpoints:</h2>
+        
+        <div class="endpoint">
+            <div class="method">GET</div>
+            <code>/api/memes</code>
+            <p>Retrieve all memes from the gallery</p>
+        </div>
+        
+        <div class="endpoint">
+            <div class="method">POST</div>
+            <code>/api/memes</code>
+            <p>Add a new meme to the gallery</p>
+            <p><strong>Required fields:</strong> title, image_url, user_id</p>
+        </div>
+
+        <h2>Usage:</h2>
+        <p>This API is deployed on Netlify using serverless functions. All endpoints are prefixed with <code>/api/</code></p>
+        
+        <h3>Example POST Request:</h3>
+        <pre>
+{
+  "title": "Drake Pointing",
+  "image_url": "https://i.imgur.com/example.jpg",
+  "user_id": "cassandra"
+}
+        </pre>
+    </div>
+</body>
+</html>

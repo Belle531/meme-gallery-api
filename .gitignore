@@ -16,3 +16,5 @@ yarn-debug.log*
 .idea/
 .vscode/
 *.swp
+# Local Netlify folder
+.netlify
