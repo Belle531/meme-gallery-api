@@ -25,6 +25,36 @@ By Cassandra Moore
 
 - **GET** `https://your-site-name.netlify.app/api/memes` - Retrieve all memes
 - **POST** `https://your-site-name.netlify.app/api/memes` - Add a new meme
+- **GET** `https://your-site-name.netlify.app/api/memes/:id` - Retrieve single meme by ID
+
+## 🎨 Landing Page Design
+
+The API includes a custom-designed landing page at the root URL with enhanced visual aesthetics:
+
+### **Visual Theme:**
+- **Background**: Dark blue (#3107ee) for modern tech aesthetic
+- **Container**: Light purple (rgb(201, 196, 235)) for elegant contrast
+- **Typography**: Monospace font family ('Courier New', Monaco) for developer-focused design
+- **Layout**: Responsive design with centered content and subtle shadows
+
+### **Features:**
+- ✅ **Interactive Documentation** - Live API endpoint examples
+- ✅ **Real Meme Preview** - Visual demonstration of API responses
+- ✅ **Professional Branding** - Custom color scheme and typography
+- ✅ **Mobile Responsive** - Optimized for all screen sizes
+- ✅ **Developer-Focused** - Code-style fonts and tech aesthetic
+
+### **Technical Implementation:**
+```css
+/* Key CSS Variables */
+--primary-bg: #3107ee;           /* Main background */
+--container-bg: rgb(201, 196, 235); /* Content area */
+--font-stack: 'Courier New', Monaco, monospace; /* Developer fonts */
+```
+
+### **Access Points:**
+- **Local Development**: `http://localhost:3000/`
+- **Production**: `https://meme-gallery-api.netlify.app/`
 
 ## 📋 Request/Response Format
 
@@ -172,6 +202,12 @@ Import the following requests into Postman:
 ```bash
 # GET all memes
 curl https://your-site-name.netlify.app/api/memes
+
+# GET single meme by ID
+curl https://your-site-name.netlify.app/api/memes/1
+
+# GET non-existent meme (404 test)
+curl https://your-site-name.netlify.app/api/memes/999
 
 # POST new meme
 curl -X POST https://your-site-name.netlify.app/api/memes \
