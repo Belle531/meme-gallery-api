@@ -9,6 +9,13 @@ const PORT = process.env.PORT || 3000;
 // Middleware to parse incoming JSON data in the request body
 app.use(express.json());
 
+// Logging middleware that runs on every request
+function logger(req, res, next) {
+    console.log(`${req.method} ${req.url} at ${new Date().toISOString()}`);
+    next();
+}
+app.use(logger);
+
 // In-memory array to simulate data storage
 let memes = [
     { id: 1, title: "Distracted Boyfriend", image_url: "https://i.imgur.com/example1.jpg", user_id: "system" },

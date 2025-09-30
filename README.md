@@ -32,12 +32,14 @@ By Cassandra Moore
 The API includes a custom-designed landing page at the root URL with enhanced visual aesthetics:
 
 ### **Visual Theme:**
+
 - **Background**: Dark blue (#3107ee) for modern tech aesthetic
 - **Container**: Light purple (rgb(201, 196, 235)) for elegant contrast
 - **Typography**: Monospace font family ('Courier New', Monaco) for developer-focused design
 - **Layout**: Responsive design with centered content and subtle shadows
 
 ### **Features:**
+
 - ✅ **Interactive Documentation** - Live API endpoint examples
 - ✅ **Real Meme Preview** - Visual demonstration of API responses
 - ✅ **Professional Branding** - Custom color scheme and typography
@@ -45,6 +47,7 @@ The API includes a custom-designed landing page at the root URL with enhanced vi
 - ✅ **Developer-Focused** - Code-style fonts and tech aesthetic
 
 ### **Technical Implementation:**
+
 ```css
 /* Key CSS Variables */
 --primary-bg: #3107ee;           /* Main background */
@@ -53,6 +56,7 @@ The API includes a custom-designed landing page at the root URL with enhanced vi
 ```
 
 ### **Access Points:**
+
 - **Local Development**: `http://localhost:3000/`
 - **Production**: `https://meme-gallery-api.netlify.app/`
 
