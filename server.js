@@ -79,22 +79,55 @@ app.post("/memes", (req, res) => {
     res.status(201).json(newMeme);
 });
 
+// PUT /memes/:id → update a meme by ID
+app.put("/memes/:id", (req, res) => {
+    const { id } = req.params;
+    const { title, image_url } = req.body;
+    const meme = memes.find((m) => m.id === parseInt(id));
+
+    if (!meme) {
+        return res.status(404).json({ error: "Meme not found" });
+    }
+
+    meme.title = title || meme.title;
+    meme.image_url = image_url || meme.image_url;
+
+    res.json(meme);
+});
+
+// DELETE /memes/:id → remove a meme by ID
+app.delete("/memes/:id", (req, res) => {
+    const { id } = req.params;
+    const index = memes.findIndex((m) => m.id === parseInt(id));
+
+    if (index === -1) {
+        return res.status(404).json({ error: "Meme not found" });
+    }
+
+    const deleted = memes.splice(index, 1);
+    res.json(deleted[0]);
+});
+
 // Test route to verify error handling middleware works
-app.get("/error-test", (req, res) => {
+app.get("/error-test", (req, res, next) => {
     console.log("ERROR-TEST ROUTE HIT!");
-    throw new Error("Test error");
+    const error = new Error("Test error");
+    console.log("About to call next(error)");
+    next(error);
 });
 
 // Error handling middleware for malformed JSON (moved to end)
 app.use((err, req, res, next) => {
+    console.log("JSON ERROR HANDLER CALLED, error type:", err.constructor.name);
     if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
         return res.status(400).json({ error: 'Invalid JSON format in request body' });
     }
-    next();
+    next(err);
 });
 
 // General error-handling middleware (catches all other errors)
 app.use((err, req, res, next) => {
+    console.log("ERROR HANDLER CALLED!");
     console.error(err.stack);
     res.status(500).json({ error: "Something went wrong!" });
 });

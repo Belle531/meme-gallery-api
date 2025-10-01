@@ -7,6 +7,8 @@ By Cassandra Moore
 ## 🚀 Features
 
 - ✅ **RESTful API** with GET and POST endpoints
+- ✅ **Request Logging Middleware** - Logs all API requests with timestamps
+- ✅ **Centralized Error Handling** - Custom error middleware with stack trace logging
 - ✅ **Input Validation** - Rejects empty/missing fields
 - ✅ **JSON Error Handling** - Catches malformed requests
 - ✅ **CORS Support** - Cross-origin requests enabled
@@ -19,7 +21,9 @@ By Cassandra Moore
 ### Local Development (Express.js)
 
 - **GET** `http://localhost:3000/memes` - Retrieve all memes
+- **GET** `http://localhost:3000/memes/:id` - Retrieve single meme by ID
 - **POST** `http://localhost:3000/memes` - Add a new meme
+- **GET** `http://localhost:3000/error-test` - Test error handling middleware
 
 ### Production (Netlify Functions)
 
@@ -165,7 +169,67 @@ meme-gallery-api/
 - **Validation**: Custom input validation
 - **Error Handling**: JSON parsing and HTTP error responses
 
+## 🛡️ Middleware Features
+
+### Request Logging Middleware
+
+Every API request is automatically logged to the console with detailed information:
+
+```javascript
+function logger(req, res, next) {
+    console.log(`${req.method} ${req.url} at ${new Date().toISOString()}`);
+    next();
+}
+```
+
+**Sample Console Output:**
+
+```bash
+GET /memes at 2025-10-01T01:38:13.085Z
+POST /memes at 2025-10-01T01:39:45.234Z
+GET /memes/1 at 2025-10-01T01:40:12.567Z
+```
+
+### Centralized Error Handling
+
+Comprehensive error handling middleware catches and processes all errors:
+
+```javascript
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: "Something went wrong!" });
+});
+```
+
+**Features:**
+
+- ✅ **Stack Trace Logging** - Full error details logged to console for debugging
+- ✅ **Generic Client Responses** - User-friendly error messages (no sensitive info exposed)
+- ✅ **JSON Error Handling** - Special handling for malformed JSON requests
+- ✅ **Consistent Error Format** - All errors return standardized JSON responses
+
+### Error Testing Endpoint
+
+Test the error handling system with a dedicated endpoint:
+
+- **GET** `/error-test` - Triggers a test error to verify middleware functionality
+- **Response**: `500 Internal Server Error` with `{"error": "Something went wrong!"}`
+- **Console**: Full error stack trace logged for debugging
+
 ## 🧪 Testing
+
+### Middleware Testing
+
+**Test Request Logging:**
+
+1. Make any API request (GET `/memes`, POST `/memes`, etc.)
+2. Check console for log entry: `METHOD /path at TIMESTAMP`
+
+**Test Error Handling:**
+
+1. Send GET request to `/error-test`
+2. Verify 500 response: `{"error": "Something went wrong!"}`
+3. Check console for error stack trace
 
 ### Postman Collection
 
@@ -239,8 +303,9 @@ All POST requests must include:
 - `200 OK` - Successful GET request
 - `201 Created` - Successful POST request
 - `400 Bad Request` - Missing required fields or invalid JSON
+- `404 Not Found` - Meme ID not found (GET `/memes/:id`)
 - `405 Method Not Allowed` - Unsupported HTTP method
-- `500 Internal Server Error` - Server error
+- `500 Internal Server Error` - Server error (caught by error middleware)
 
 ## 🌟 ES6+ Features Showcase
 
