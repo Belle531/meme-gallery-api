@@ -79,12 +79,23 @@ app.post("/memes", (req, res) => {
     res.status(201).json(newMeme);
 });
 
+// Test route to verify error handling middleware works
+app.get("/error-test", (req, res) => {
+    throw new Error("Test error");
+});
+
 // Error handling middleware for malformed JSON (moved to end)
 app.use((err, req, res, next) => {
     if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
         return res.status(400).json({ error: 'Invalid JSON format in request body' });
     }
     next();
+});
+
+// General error-handling middleware (catches all other errors)
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: "Something went wrong!" });
 });
 
 // --- SERVER START ---
