@@ -81,6 +81,7 @@ app.post("/memes", (req, res) => {
 
 // Test route to verify error handling middleware works
 app.get("/error-test", (req, res) => {
+    console.log("ERROR-TEST ROUTE HIT!");
     throw new Error("Test error");
 });
 
