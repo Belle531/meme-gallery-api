@@ -82,15 +82,19 @@ app.post("/memes", (req, res) => {
 // PUT /memes/:id → update a meme by ID
 app.put("/memes/:id", (req, res) => {
     const { id } = req.params;
-    const { title, image_url } = req.body;
+    const { title, url } = req.body;
+    console.log("PUT request - ID:", id, "Body:", { title, url });
+    
     const meme = memes.find((m) => m.id === parseInt(id));
+    console.log("Found meme before update:", meme);
 
     if (!meme) {
         return res.status(404).json({ error: "Meme not found" });
     }
 
     meme.title = title || meme.title;
-    meme.image_url = image_url || meme.image_url;
+    meme.image_url = url || meme.image_url;
+    console.log("Meme after update:", meme);
 
     res.json(meme);
 });
@@ -98,13 +102,16 @@ app.put("/memes/:id", (req, res) => {
 // DELETE /memes/:id → remove a meme by ID
 app.delete("/memes/:id", (req, res) => {
     const { id } = req.params;
+    console.log("DELETE request - ID:", id);
     const index = memes.findIndex((m) => m.id === parseInt(id));
+    console.log("Found index:", index, "Current memes:", memes);
 
     if (index === -1) {
         return res.status(404).json({ error: "Meme not found" });
     }
 
     const deleted = memes.splice(index, 1);
+    console.log("Deleted meme:", deleted[0], "Remaining memes:", memes);
     res.json(deleted[0]);
 });
 
