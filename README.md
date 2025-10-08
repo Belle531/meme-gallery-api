@@ -1,20 +1,58 @@
 # 🎭 Meme Gallery API
 
-A modern REST API for managing memes built with **Express.js** and **Netlify Functions**. Features comprehensive input validation, error handling, and serverless deployment.
+A RESTful API for managing a meme gallery with user authentication, built with Express.js and PostgreSQL on AWS RDS.
 
 By Cassandra Moore
 
+## 🏗️ Architecture
+
+- **Backend**: Node.js with Express.js
+- **Database**: PostgreSQL on AWS RDS
+- **Environment**: Environment variables for secure configuration
+
+## �️ AWS RDS Database Configuration
+
+### RDS Endpoint Information
+```
+Host: meme-gallery-api.c4xe62c8cx3r.us-east-1.rds.amazonaws.com
+Port: 5432
+Database: meme_gallery
+User: postgres
+```
+*Note: Password not included for security reasons*
+
+### Database Schema
+The database consists of two main tables:
+- **users**: Stores user account information (id, username, password, created_at)
+- **memes**: Stores meme entries with foreign key references to users (id, title, url, user_id, created_at)
+
+See `schema.sql` for complete table definitions.
+
+## 📊 Database Files Included
+
+### schema.sql
+Contains the CREATE TABLE statements for:
+- `users` table with proper constraints and indexes
+- `memes` table with foreign key references
+- Performance indexes and table comments
+
+### crud.sql
+Contains comprehensive CRUD operation examples:
+- **CREATE**: INSERT statements for sample users and memes
+- **READ**: Various SELECT queries including joins, filtering, and aggregation
+- **UPDATE**: UPDATE statements for modifying existing records
+- **DELETE**: DELETE statements with proper constraint handling
+
 ## 🚀 Features
 
-- ✅ **RESTful API** with GET and POST endpoints
+- ✅ **PostgreSQL Database** - AWS RDS hosted database with SSL connectivity
+- ✅ **RESTful API** - Full CRUD operations for memes and users
 - ✅ **Request Logging Middleware** - Logs all API requests with timestamps
 - ✅ **Centralized Error Handling** - Custom error middleware with stack trace logging
-- ✅ **Input Validation** - Rejects empty/missing fields
-- ✅ **JSON Error Handling** - Catches malformed requests
-- ✅ **CORS Support** - Cross-origin requests enabled
-- ✅ **ES6+ Features** - Modern JavaScript (modules, destructuring, arrow functions, async/await)
-- ✅ **Serverless Deployment** - Netlify Functions ready
-- ✅ **Local Development** - Express.js server for testing
+- ✅ **Input Validation** - Rejects empty/missing fields with proper validation
+- ✅ **SQL Injection Protection** - Parameterized queries for security
+- ✅ **Environment Variables** - Secure configuration management
+- ✅ **Foreign Key Constraints** - Database integrity enforcement
 
 ## 📡 API Endpoints
 

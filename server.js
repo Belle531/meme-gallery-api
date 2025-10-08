@@ -1,10 +1,29 @@
-// --- WARNING: This version uses an in-memory array and does NOT connect to the database ---
+// --- PostgreSQL Database Version ---
 
 import express from 'express';
-// We don't need 'dotenv' or 'pg' since we are using a local array.
+import pkg from 'pg';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
+
+// PostgreSQL client setup
+const { Pool } = pkg;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Create PostgreSQL connection pool
+const pool = new Pool({
+    host: process.env.PGHOST,
+    user: process.env.PGUSER,
+    password: process.env.PGPASSWORD,
+    database: process.env.PGDATABASE,
+    port: process.env.PGPORT,
+    ssl: {
+        rejectUnauthorized: false // Required for AWS RDS
+    }
+});
 
 // Middleware to parse incoming JSON data in the request body
 app.use(express.json());
@@ -16,11 +35,15 @@ function logger(req, res, next) {
 }
 app.use(logger);
 
-// In-memory array to simulate data storage
-let memes = [
-    { id: 1, title: "Distracted Boyfriend", image_url: "https://i.imgur.com/example1.jpg", user_id: "system" },
-    { id: 2, title: "Success Kid", image_url: "https://i.imgur.com/example2.jpg", user_id: "system" }
-];
+// Test database connection
+pool.connect((err, client, release) => {
+    if (err) {
+        console.error('Error connecting to PostgreSQL database:', err.stack);
+    } else {
+        console.log('✅ Successfully connected to PostgreSQL database');
+        release();
+    }
+});
 
 // --- ROUTES ---
 
@@ -29,90 +52,106 @@ app.get('/', (req, res) => {
     res.send('Meme Gallery API By Cassandra Moore ');
 });
 
-// GET /memes → return all memes from the local array
-app.get("/memes", (req, res) => {
-    // Return the current contents of the memes array
-    res.json(memes);
+// GET /memes → return all memes from the database
+app.get("/memes", async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM memes ORDER BY id');
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error fetching memes:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 // GET /memes/:id → return a single meme by ID
-app.get("/memes/:id", (req, res) => {
-    // Extract the id parameter from the URL
-    const { id } = req.params;
-    
-    // Find the meme with the matching ID (convert string to number)
-    const meme = memes.find((m) => m.id === parseInt(id));
-    
-    // If meme not found, return 404 error
-    if (!meme) {
-        return res.status(404).json({ error: "Meme not found" });
+app.get("/memes/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Query database for meme with specific ID
+        const result = await pool.query('SELECT * FROM memes WHERE id = $1', [parseInt(id)]);
+        
+        // If meme not found, return 404 error
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Meme not found" });
+        }
+        
+        // Return the found meme
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error fetching meme:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
-    
-    // Return the found meme
-    res.json(meme);
 });
 
-// POST /memes → add a meme to the local array
-app.post("/memes", (req, res) => {
-    // Destructure required fields from the request body
-    const { title, image_url, user_id } = req.body; 
+// POST /memes → add a meme to the database
+app.post("/memes", async (req, res) => {
+    try {
+        // Destructure required fields from the request body
+        const { title, url, user_id } = req.body; 
 
-    // Validation: Check if all required fields are present
-    // NOTE: I'm using image_url and user_id to match the structure we'll use for the database
-    if (!title || !image_url || !user_id) {
-        return res.status(400).json({ error: "title, image_url, and user_id are required fields." });
+        // Validation: Check if all required fields are present
+        if (!title || !url || !user_id) {
+            return res.status(400).json({ error: "title, url, and user_id are required fields." });
+        }
+        
+        // Insert new meme into database
+        const result = await pool.query(
+            'INSERT INTO memes (title, url, user_id) VALUES ($1, $2, $3) RETURNING *',
+            [title, url, parseInt(user_id)]
+        );
+        
+        // Return the newly created meme with 201 status
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error('Error creating meme:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
-    
-    // Create a new meme object with a calculated ID and current timestamp
-    const newMeme = { 
-        id: memes.length > 0 ? memes[memes.length - 1].id + 1 : 1, 
-        title, 
-        image_url, 
-        user_id,
-        created_at: new Date().toISOString()
-    };
-    
-    // Add the new meme to the in-memory array
-    memes.push(newMeme);
-    
-    // Return the newly created meme with 201 status
-    res.status(201).json(newMeme);
 });
 
 // PUT /memes/:id → update a meme by ID
-app.put("/memes/:id", (req, res) => {
-    const { id } = req.params;
-    const { title, url } = req.body;
-    console.log("PUT request - ID:", id, "Body:", { title, url });
-    
-    const meme = memes.find((m) => m.id === parseInt(id));
-    console.log("Found meme before update:", meme);
+app.put("/memes/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, url } = req.body;
+        
+        // Check if meme exists
+        const existingMeme = await pool.query('SELECT * FROM memes WHERE id = $1', [parseInt(id)]);
+        
+        if (existingMeme.rows.length === 0) {
+            return res.status(404).json({ error: "Meme not found" });
+        }
 
-    if (!meme) {
-        return res.status(404).json({ error: "Meme not found" });
+        // Update meme in database
+        const result = await pool.query(
+            'UPDATE memes SET title = COALESCE($1, title), url = COALESCE($2, url) WHERE id = $3 RETURNING *',
+            [title, url, parseInt(id)]
+        );
+
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error updating meme:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
-
-    meme.title = title || meme.title;
-    meme.image_url = url || meme.image_url;
-    console.log("Meme after update:", meme);
-
-    res.json(meme);
 });
 
 // DELETE /memes/:id → remove a meme by ID
-app.delete("/memes/:id", (req, res) => {
-    const { id } = req.params;
-    console.log("DELETE request - ID:", id);
-    const index = memes.findIndex((m) => m.id === parseInt(id));
-    console.log("Found index:", index, "Current memes:", memes);
+app.delete("/memes/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Delete meme from database and return the deleted meme
+        const result = await pool.query('DELETE FROM memes WHERE id = $1 RETURNING *', [parseInt(id)]);
 
-    if (index === -1) {
-        return res.status(404).json({ error: "Meme not found" });
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Meme not found" });
+        }
+
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error deleting meme:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
-
-    const deleted = memes.splice(index, 1);
-    console.log("Deleted meme:", deleted[0], "Remaining memes:", memes);
-    res.json(deleted[0]);
 });
 
 // Test route to verify error handling middleware works
@@ -143,5 +182,7 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
-    console.log(`⚠️ WARNING: Server is using local memory, not the database.`);
+    console.log(`✅ Server connected to PostgreSQL database.`);
 });
+
+
