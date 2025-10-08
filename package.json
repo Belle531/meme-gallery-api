@@ -1,22 +1,21 @@
 {
   "name": "meme-gallery-api",
   "version": "1.0.0",
-  "description": "A REST API for managing memes built for Netlify deployment",
+  "description": "A REST API for managing memes with PostgreSQL database, deployable on Render",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js",
-    "build": "echo 'Build complete - using Netlify Functions'",
-    "dev": "netlify dev",
-    "deploy": "netlify deploy",
-    "deploy:prod": "netlify deploy --prod",
+    "build": "npm install",
+    "dev": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "api",
     "memes",
     "express",
-    "netlify",
-    "serverless"
+    "postgresql",
+    "render"
   ],
   "author": "Cassandra Moore",
   "license": "ISC",
