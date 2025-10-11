@@ -10,13 +10,13 @@ By Cassandra Moore
 - **Database**: PostgreSQL on AWS RDS
 - **Environment**: Environment variables for secure configuration
 
-## �️ AWS RDS Database Configuration
+## 🗄️ AWS RDS Database Configuration
 
 ### RDS Endpoint Information
 
-Host: meme-gallery-api.c4xe62c8cx3r.us-east-1.rds.amazonaws.com
-Port: 5432
-Database: meme_gallery
+Host: meme-gallery-api.c4xe62c8cx3r.us-east-1.rds.amazonaws.com  
+Port: 5432  
+Database: meme_gallery  
 User: postgres
 
 *Note: Password not included for security reasons
@@ -26,7 +26,6 @@ User: postgres
 The database consists of two main tables:
 
 - **users**: Stores user account information (id, username, password, created_at)
-
 - **memes**: Stores meme entries with foreign key references to users (id, title, url, user_id, created_at)
 
 See `schema.sql` for complete table definitions.
@@ -63,18 +62,17 @@ Contains comprehensive CRUD operation examples:
 
 ## 📡 API Endpoints
 
-### Local Development (Express.js)
+### Local Development & Production (Express.js on Render)
 
-- **GET** `http://localhost:3000/memes` - Retrieve all memes
-- **GET** `http://localhost:3000/memes/:id` - Retrieve single meme by ID
-- **POST** `http://localhost:3000/memes` - Add a new meme
-- **GET** `http://localhost:3000/error-test` - Test error handling middleware
+- **GET** `/memes` - Retrieve all memes
+- **GET** `/memes/:id` - Retrieve single meme by ID
+- **POST** `/memes` - Add a new meme
+- **PUT** `/memes/:id` - Update a meme
+- **DELETE** `/memes/:id` - Delete a meme
+- **GET** `/error-test` - Test error handling middleware
 
-### Production (Netlify Functions)
-
-- **GET** `https://your-site-name.netlify.app/api/memes` - Retrieve all memes
-- **POST** `https://your-site-name.netlify.app/api/memes` - Add a new meme
-- **GET** `https://your-site-name.netlify.app/api/memes/:id` - Retrieve single meme by ID
+**Local:** `http://localhost:3000/`  
+**Production:** `https://your-app-name.onrender.com/`
 
 ## 🎨 Landing Page Design
 
@@ -161,55 +159,45 @@ The API includes a custom-designed landing page at the root URL with enhanced vi
 3. **Start development server**
 
    ```bash
-   # Express.js server (original)
    npm start
-   
-   # OR Netlify local development
-   npm run dev
    ```
 
 4. **Test the API**
-   - Server runs at `http://localhost:3000` (Express) or `http://localhost:8888` (Netlify Dev)
+   - Server runs at `http://localhost:3000`
    - Use Postman or curl to test endpoints
 
 ## 🚀 Deployment
 
-This project is configured for **Netlify deployment** using serverless functions.
+This project is configured for **Render deployment** using Express.js and PostgreSQL.
 
-### Deploy via Netlify Website
+### Deploy via Render
 
-1. Go to [netlify.com](https://netlify.com)
+1. Go to [render.com](https://render.com)
 2. Connect your GitHub repository
-3. Netlify auto-detects configuration from `netlify.toml`
-4. Deploy automatically!
-
-### Deploy via CLI
-
-```bash
-npm install -g netlify-cli
-netlify login
-netlify init
-netlify deploy --prod
-```
+3. Create a new Web Service and select your repo
+4. Set build command: `npm install`
+5. Set start command: `npm start`
+6. Add environment variables from your `.env` file
+7. Deploy and get your live URL!
 
 ## 📁 Project Structure
 
-meme-gallery-api/
-├── netlify/functions/
-│   └── memes.js              # Serverless API functions
-├── public/
-│   └── index.html            # Landing page
-├── netlify.toml              # Netlify configuration
-├── package.json              # Dependencies and scripts
-├── server.js                 # Express.js server (local dev)
-├── DEPLOYMENT.md             # Deployment instructions
+meme-gallery-api/  
+├── public/  
+│   └── index.html            # Landing page  
+├── package.json              # Dependencies and scripts  
+├── server.js                 # Express.js server  
+├── schema.sql                # Database schema  
+├── crud.sql                  # Sample CRUD operations  
+├── .env                      # Environment variables (not committed)  
+├── .env.example              # Example environment file  
 └── README.md                 # This file
 
 ## 💻 Tech Stack
 
 - **Runtime**: Node.js
 - **Framework**: Express.js
-- **Deployment**: Netlify Functions (Serverless)
+- **Deployment**: Render (Web Service)
 - **Development**: ES6+ JavaScript (modules, destructuring, arrow functions)
 - **Validation**: Custom input validation
 - **Error Handling**: JSON parsing and HTTP error responses
@@ -301,10 +289,12 @@ Import the following requests into Postman:
   "image_url": "https://i.imgur.com/example.jpg",
   "user_id": "your-username"
 }
+```
 
 - Expected: `201 Created` with new meme object
 
 **Error Testing:**
+
 - Method: `POST`
 - URL: `{{baseURL}}/api/memes`
 - Body: `{}` (empty)
@@ -380,22 +370,11 @@ const result = await pool.query('SELECT * FROM memes');
 
 ## Architecture
 
- Local Development (Express.js)
-
-Client Request → Express Server → In-Memory Array → JSON Response
-
- Production (Netlify Functions)
-
-Client Request → Netlify CDN → Serverless Function → In-Memory Array → JSON Response
-
-### Database Version (Optional)
-
-Client Request → API → PostgreSQL Database → JSON Response
+Client Request → Express Server → PostgreSQL Database → JSON Response
 
 ## 📊 Performance Considerations
 
-- **Serverless Functions**: Cold start ~100-500ms, warm ~10-50ms
-- **In-Memory Storage**: Fast but data resets on function restart
+- **Database Storage**: Persistent data in PostgreSQL
 - **CORS Enabled**: Supports cross-origin requests from web apps
 - **JSON Validation**: Prevents malformed request processing
 
