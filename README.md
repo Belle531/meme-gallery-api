@@ -2,6 +2,16 @@
 
 A RESTful API for managing a meme gallery with user authentication, built with Express.js and PostgreSQL on AWS RDS.
 
+## 🔗 GitHub Repository
+
+[https://github.com/Belle531/meme-gallery-api](https://github.com/Belle531/meme-gallery-api)
+
+## 🧬 Prisma ORM Integration
+
+- **Database Access:** All CRUD operations are now handled via Prisma ORM, connecting Express directly to AWS RDS PostgreSQL.
+- **Models:** Prisma models for `User` and `Meme` are defined in `prisma/schema.prisma` and kept in sync with the database.
+- **Seeding:** Example seed script (`prisma/seed.js`) demonstrates inserting sample users and memes using Prisma.
+
 By Cassandra Moore
 
 ## 🏗️ Architecture
@@ -10,7 +20,7 @@ By Cassandra Moore
 - **Database**: PostgreSQL on AWS RDS
 - **Environment**: Environment variables for secure configuration
 
-## 🗄️ AWS RDS Database Configuration
+## 🗄️ AWS RDS Database Configuration (via Prisma)
 
 ### RDS Endpoint Information
 
@@ -51,6 +61,8 @@ Contains comprehensive CRUD operation examples:
 
 ## 🚀 Features
 
+- ✅ **Prisma ORM** - All database queries use Prisma for type safety and maintainability
+
 - ✅ **PostgreSQL Database** - AWS RDS hosted database with SSL connectivity
 - ✅ **RESTful API** - Full CRUD operations for memes and users
 - ✅ **Request Logging Middleware** - Logs all API requests with timestamps
@@ -60,7 +72,7 @@ Contains comprehensive CRUD operation examples:
 - ✅ **Environment Variables** - Secure configuration management
 - ✅ **Foreign Key Constraints** - Database integrity enforcement
 
-## 📡 API Endpoints
+## 📡 API Endpoints (Prisma-powered)
 
 ### Local Development & Production (Express.js on Render)
 
@@ -141,6 +153,26 @@ The API includes a custom-designed landing page at the root URL with enhanced vi
 
 ## 🛠️ Local Development Setup
 
+### Prisma Setup
+
+1. Install dependencies
+
+  ```bash
+  npm install
+ 
+2. Generate Prisma client
+  ```bash
+  npx prisma generate
+
+3. Run migrations
+  ```bash
+  npx prisma migrate dev
+
+4. (Optional) Seed database
+  ```bash
+  node prisma/seed.js
+  ```
+
 1. **Clone the repository**
 
    ```bash
@@ -167,6 +199,8 @@ The API includes a custom-designed landing page at the root URL with enhanced vi
    - Use Postman or curl to test endpoints
 
 ## 🚀 Deployment
+
+Express API is deployed to Render and connects to AWS RDS using Prisma ORM.
 
 This project is configured for **Render deployment** using Express.js and PostgreSQL.
 
