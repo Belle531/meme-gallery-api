@@ -1,5 +1,6 @@
 import express from "express";
-import { getMemes, getMemeById, createMeme, updateMeme, deleteMeme } from "../controllers/memeController.js";
+import { getMemes, getMemeById, createMeme, updateMeme, deleteMeme, getUserMemes } from "../controllers/memeController.js";
+router.get("/users/:id/memes", getUserMemes);
 
 const router = express.Router();
 
