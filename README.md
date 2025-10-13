@@ -74,6 +74,32 @@ Contains comprehensive CRUD operation examples:
 
 ## 📡 API Endpoints (Prisma-powered)
 
+### CRUD Endpoints (Prisma + AWS RDS)
+
+- **CREATE**: `POST /memes` — Add a new meme. Request body:
+  ```json
+  {
+    "title": "Success Kid",
+    "url": "https://i.imgur.com/example2.jpg",
+    "userId": 1
+  }
+  ```
+  Returns: Created meme object with `id`, `title`, `url`, `user_id`, and `created_at`.
+
+- **READ**: `GET /memes` — Returns an array of memes with their user info.
+- **READ by ID**: `GET /memes/:id` — Returns a single meme object with user info.
+- **UPDATE**: `PUT /memes/:id` — Update meme details. Request body:
+  ```json
+  {
+    "title": "Updated Meme Title"
+  }
+  ```
+  Returns: Updated meme object.
+- **DELETE**: `DELETE /memes/:id` — Removes the meme from the database. Returns deleted meme object.
+
+- All changes are instantly reflected in AWS RDS and can be verified with direct SQL queries (e.g., `SELECT * FROM memes;`).
+
+
 ### Local Development & Production (Express.js on Render)
 
 - **GET** `/memes` - Retrieve all memes
@@ -121,35 +147,7 @@ The API includes a custom-designed landing page at the root URL with enhanced vi
 
 ## 📋 Request/Response Format
 
-### POST Request Body
 
-```json
-{
-  "title": "Grumpy Cat",
-  "image_url": "https://i.imgur.com/example.jpg",
-  "user_id": "cassandra"
-}
-```
-
-### Response Format
-
-```json
-{
-  "id": 1,
-  "title": "Grumpy Cat",
-  "image_url": "https://i.imgur.com/example.jpg",
-  "user_id": "cassandra",
-  "created_at": "2025-09-29T10:30:00.000Z"
-}
-```
-
-### Error Response
-
-```json
-{
-  "error": "title, image_url, and user_id are required fields."
-}
-```
 
 ## 🛠️ Local Development Setup
 
