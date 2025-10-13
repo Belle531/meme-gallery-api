@@ -77,28 +77,26 @@ Contains comprehensive CRUD operation examples:
 ### CRUD Endpoints (Prisma + AWS RDS)
 
 - **CREATE**: `POST /memes` — Add a new meme. Request body:
-  ```json
+json
   {
     "title": "Success Kid",
-    "url": "https://i.imgur.com/example2.jpg",
+    "url": "[https://i.imgur.com/example2.jpg]",
     "userId": 1
   }
-  ```
+
   Returns: Created meme object with `id`, `title`, `url`, `user_id`, and `created_at`.
 
 - **READ**: `GET /memes` — Returns an array of memes with their user info.
 - **READ by ID**: `GET /memes/:id` — Returns a single meme object with user info.
 - **UPDATE**: `PUT /memes/:id` — Update meme details. Request body:
-  ```json
+json
   {
     "title": "Updated Meme Title"
   }
-  ```
   Returns: Updated meme object.
 - **DELETE**: `DELETE /memes/:id` — Removes the meme from the database. Returns deleted meme object.
 
 - All changes are instantly reflected in AWS RDS and can be verified with direct SQL queries (e.g., `SELECT * FROM memes;`).
-
 
 ### Local Development & Production (Express.js on Render)
 
@@ -146,8 +144,6 @@ The API includes a custom-designed landing page at the root URL with enhanced vi
 - **Production**: `https://meme-gallery-api.netlify.app/`
 
 ## 📋 Request/Response Format
-
-
 
 ## 🛠️ Local Development Setup
 
