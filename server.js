@@ -3,6 +3,8 @@
 import express from 'express';
 import pkg from 'pg';
 import dotenv from 'dotenv';
+import authRoutes from './routes/authRoutes.js';
+import memeRoutes from './routes/memeRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -40,7 +42,7 @@ pool.connect((err, client, release) => {
     if (err) {
         console.error('Error connecting to PostgreSQL database:', err.stack);
     } else {
-        console.log('✅ Successfully connected to PostgreSQL database');
+        console.log(' Successfully connected to PostgreSQL database');
         release();
     }
 });
@@ -52,107 +54,8 @@ app.get('/', (req, res) => {
     res.send('Meme Gallery API By Cassandra Moore ');
 });
 
-// GET /memes → return all memes from the database
-app.get("/memes", async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM memes ORDER BY id');
-        res.json(result.rows);
-    } catch (error) {
-        console.error('Error fetching memes:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// GET /memes/:id → return a single meme by ID
-app.get("/memes/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        
-        // Query database for meme with specific ID
-        const result = await pool.query('SELECT * FROM memes WHERE id = $1', [parseInt(id)]);
-        
-        // If meme not found, return 404 error
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: "Meme not found" });
-        }
-        
-        // Return the found meme
-        res.json(result.rows[0]);
-    } catch (error) {
-        console.error('Error fetching meme:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// POST /memes → add a meme to the database
-app.post("/memes", async (req, res) => {
-    try {
-        // Destructure required fields from the request body
-        const { title, url, user_id } = req.body; 
-
-        // Validation: Check if all required fields are present
-        if (!title || !url || !user_id) {
-            return res.status(400).json({ error: "title, url, and user_id are required fields." });
-        }
-        
-        // Insert new meme into database
-        const result = await pool.query(
-            'INSERT INTO memes (title, url, user_id) VALUES ($1, $2, $3) RETURNING *',
-            [title, url, parseInt(user_id)]
-        );
-        
-        // Return the newly created meme with 201 status
-        res.status(201).json(result.rows[0]);
-    } catch (error) {
-        console.error('Error creating meme:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// PUT /memes/:id → update a meme by ID
-app.put("/memes/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { title, url } = req.body;
-        
-        // Check if meme exists
-        const existingMeme = await pool.query('SELECT * FROM memes WHERE id = $1', [parseInt(id)]);
-        
-        if (existingMeme.rows.length === 0) {
-            return res.status(404).json({ error: "Meme not found" });
-        }
-
-        // Update meme in database
-        const result = await pool.query(
-            'UPDATE memes SET title = COALESCE($1, title), url = COALESCE($2, url) WHERE id = $3 RETURNING *',
-            [title, url, parseInt(id)]
-        );
-
-        res.json(result.rows[0]);
-    } catch (error) {
-        console.error('Error updating meme:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// DELETE /memes/:id → remove a meme by ID
-app.delete("/memes/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        
-        // Delete meme from database and return the deleted meme
-        const result = await pool.query('DELETE FROM memes WHERE id = $1 RETURNING *', [parseInt(id)]);
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: "Meme not found" });
-        }
-
-        res.json(result.rows[0]);
-    } catch (error) {
-        console.error('Error deleting meme:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
+app.use('/auth', authRoutes);
+app.use('/memes', memeRoutes);
 
 // Test route to verify error handling middleware works
 app.get("/error-test", (req, res, next) => {
@@ -182,7 +85,13 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
-    console.log(`✅ Server connected to PostgreSQL database.`);
+    console.log(`Server connected to PostgreSQL database.`);
 });
+
+// Sample user data for testing
+const sampleUserData = {
+  "username": "testuser",
+  "password": "testpassword"
+};
 
 
