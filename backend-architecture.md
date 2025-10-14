@@ -67,9 +67,13 @@ Like
 ## Planned Relationships
 
 - User has many Memes (one-to-many)
+
 - Meme belongs to one User (many-to-one)
+
 - User can like many Memes (many-to-many via Like)
+
 - Meme can be liked by many Users (many-to-many via Like)
+
 - Like links User and Meme (each Like references one User and one Meme)
 
 ## User Roles
@@ -85,21 +89,32 @@ Like
 ## Authentication & Role-Based Access Control
 
 - Use JWT for authentication. Users receive a token upon login, which must be sent in the Authorization header for protected routes.
+
 - Store hashed passwords in the database using bcrypt.
+
 - Add a `role` field to the User model (e.g., 'user', 'admin').
+
 - Middleware checks JWT validity and extracts user info for each request.
 - Restrict access to certain endpoints based on user role:
+
   - Only authenticated users can create, like, or update memes.
+
   - Only meme owners or admins can update or delete memes.
+
   - Only admins can manage users or view all user data.
+
 - Return appropriate error responses for unauthorized or forbidden actions.
 
 ## Authentication Flow
 
 - New users register with a username and password.
+
 - Passwords are hashed with bcrypt before saving to the database for security.
+
 - On login, the server returns a JWT containing the user’s ID and role.
+
 - Protected routes require the client to send `Authorization: Bearer <token>` in the header.
+
 - Middleware verifies the JWT, extracts user info, and enforces access control based on authentication and role.
 
 ## Relationships Diagram
@@ -112,10 +127,17 @@ User ───< likes >─── Likes ───< liked >─── Meme
 ## Other Considerations
 
 - Input validation for all endpoints to prevent invalid or malicious data.
+
 - Centralized error handling to provide consistent and informative error responses.
+
 - Use HTTPS in production to secure data in transit.
+
 - Store secrets (JWT secret, database credentials) in environment variables, never in code or version control.
+
 - Implement pagination for meme lists to improve performance and usability.
+
 - Log important actions and errors for monitoring and debugging.
+
 - Design for scalability: optimize database queries, use indexes, and consider caching for popular endpoints.
+
 - Plan for future features like notifications, comments, or image uploads.
