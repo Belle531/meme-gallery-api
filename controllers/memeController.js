@@ -89,7 +89,8 @@ export const getMemeById = async (req, res) => {
 
 
 export const createMeme = async (req, res) => {
-  const { title, url, userId } = req.body;
+  const { title, url } = req.body;
+  const userId = req.user.userId;
   try {
     const newMeme = await prisma.meme.create({
       data: { title, url, userId }
