@@ -96,14 +96,9 @@ const sampleUserData = {
 
 
 // --- LIKE/UNLIKE MEME ROUTE ---
-import Joi from "joi";
 import { authenticateToken } from "./controllers/authController.js";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-
-const likeSchema = Joi.object({
-    userId: Joi.number().required()
-});
 
 app.post("/memes/:id/like", authenticateToken, async (req, res) => {
     const { id } = req.params;
