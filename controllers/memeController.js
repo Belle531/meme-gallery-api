@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { memeSchema } from "../validation.js";
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
@@ -89,11 +90,14 @@ export const getMemeById = async (req, res) => {
 
 
 export const createMeme = async (req, res) => {
-  const { title, url } = req.body;
+  const parseResult = memeSchema.safeParse(req.body);
+  if (!parseResult.success) {
+    return res.status(400).json({ error: parseResult.error.errors[0].message });
+  }
   const userId = req.user.userId;
   try {
     const newMeme = await prisma.meme.create({
-      data: { title, url, userId }
+      data: { ...req.body, userId }
     });
     res.status(201).json(newMeme);
   } catch (error) {

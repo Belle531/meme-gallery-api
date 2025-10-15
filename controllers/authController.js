@@ -13,23 +13,31 @@ export function authenticateToken(req, res, next) {
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { userSchema } from "../validation.js";
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
 export const register = async (req, res) => {
+  const parseResult = userSchema.safeParse(req.body);
+  if (!parseResult.success) {
+    return res.status(400).json({ error: parseResult.error.errors[0].message });
+  }
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password required' });
   }
-  const hashedPassword = await bcrypt.hash(password, 10);
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
       data: { username, password: hashedPassword }
     });
-    res.status(201).json(user);
-  } catch (err) {
-    res.status(400).json({ error: 'User already exists' });
+    res.status(201).json({ id: user.id, username: user.username });
+  } catch (error) {
+    if (error.code === 'P2002') {
+      return res.status(409).json({ error: 'Username already exists' });
+    }
+    res.status(500).json({ error: 'Registration failed' });
   }
 };
 
