@@ -95,3 +95,38 @@ const sampleUserData = {
 };
 
 
+// --- LIKE/UNLIKE MEME ROUTE ---
+import Joi from "joi";
+import { authenticateToken } from "./controllers/authController.js";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+const likeSchema = Joi.object({
+    userId: Joi.number().required()
+});
+
+app.post("/memes/:id/like", authenticateToken, async (req, res) => {
+    const { id } = req.params;
+    const { error } = likeSchema.validate({ userId: req.user.userId });
+    if (error) return res.status(400).json({ error: error.details[0].message });
+
+    try {
+        const existing = await prisma.userLikesMeme.findUnique({
+            where: { userId_memeId: { userId: req.user.userId, memeId: parseInt(id) } }
+        });
+
+        if (existing) {
+            await prisma.userLikesMeme.delete({ where: { id: existing.id } });
+            return res.json({ message: "Meme unliked" });
+        } else {
+            await prisma.userLikesMeme.create({
+                data: { userId: req.user.userId, memeId: parseInt(id) }
+            });
+            return res.json({ message: "Meme liked" });
+        }
+    } catch (err) {
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+
