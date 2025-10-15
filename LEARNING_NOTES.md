@@ -176,6 +176,17 @@ Protect routes using JWT (`authenticateToken`).
      ```
    Click "Send" and screenshot the created meme response.
 
+  Correct code formate
+title=Funny Meme
+url=[https://example.com/meme.jpg]
+
+   Summary:
+
+Always match your request body to the expected fields in the controller and schema.
+Update your API documentation and Postman requests if you change the schema.
+Use server logs to pinpoint the exact error.
+If you want to add more fields, update both the Prisma schema and the controller logic, then run migrations.
+
 ## Notes
 
 - Always use plain-text password for registration and login.
