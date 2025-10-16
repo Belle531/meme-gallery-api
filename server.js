@@ -22,9 +22,7 @@ const pool = new Pool({
     password: process.env.PGPASSWORD,
     database: process.env.PGDATABASE,
     port: process.env.PGPORT,
-    ssl: {
-        rejectUnauthorized: false // Required for AWS RDS
-    }
+    ssl: false
 });
 
 // Middleware to parse incoming JSON data in the request body
