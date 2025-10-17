@@ -22,7 +22,7 @@ const pool = new Pool({
     password: process.env.PGPASSWORD,
     database: process.env.PGDATABASE,
     port: process.env.PGPORT,
-    ssl: false
+    ssl: { rejectUnauthorized: false } // <-- change here
 });
 
 // Middleware to parse incoming JSON data in the request body
