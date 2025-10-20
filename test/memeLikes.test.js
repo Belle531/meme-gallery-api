@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../index.js";
+import app from "../src/controllers/index.js";
 
 // You need to set a valid JWT token for testing
 const token = process.env.TEST_TOKEN || "<your_test_jwt_token>";

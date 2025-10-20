@@ -1,5 +1,5 @@
 import express from "express";
-import memeRoutes from "./routes/memeRoutes.js";
+import memeRoutes from "../../routes/memeRoutes.js";
 
 const app = express();
 app.use(express.json());

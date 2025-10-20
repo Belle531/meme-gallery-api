@@ -3,8 +3,8 @@
 import express from 'express';
 import pkg from 'pg';
 import dotenv from 'dotenv';
-import authRoutes from './routes/authRoutes.js';
-import memeRoutes from './routes/memeRoutes.js';
+import authRoutes from '../../routes/authRoutes.js';
+import memeRoutes from '../../routes/memeRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -94,7 +94,7 @@ const sampleUserData = {
 
 
 // --- LIKE/UNLIKE MEME ROUTE ---
-import { authenticateToken } from "./controllers/authController.js";
+import { authenticateToken } from "./authController.js";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 

@@ -13,7 +13,7 @@ export function authenticateToken(req, res, next) {
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { userSchema } from "../validation.js";
+import { userSchema } from "./validation.js";
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
