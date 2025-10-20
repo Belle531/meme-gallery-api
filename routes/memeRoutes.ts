@@ -3,11 +3,13 @@ import { getMemes, getMemeById, createMeme, updateMeme, deleteMeme, getUserMemes
 import { authenticateToken } from "../src/controllers/authController.js";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
+import type { Request, Response } from "express";
 
 const prisma = new PrismaClient();
 
 const router = express.Router();
 
+// Use type assertion for req.user
 router.get("/users/:id/memes", getUserMemes);
 router.get("/", getMemes);
 router.get("/:id", getMemeById);
@@ -20,16 +22,20 @@ const likeSchema = z.object({
   userId: z.number()
 });
 
+// Remove unused interface
+
 router.post("/:id/like", authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const parseResult = likeSchema.safeParse({ userId: req.user.userId });
+  const userId = (req as any).user?.userId;
+  const memeId = parseInt(id ?? "");
+  const parseResult = likeSchema.safeParse({ userId });
   if (!parseResult.success) {
-    return res.status(400).json({ error: parseResult.error.errors[0].message });
+    return res.status(400).json({ error: parseResult.error.issues[0]?.message || "Validation error" });
   }
 
   try {
     const existing = await prisma.userLikesMeme.findUnique({
-      where: { userId_memeId: { userId: req.user.userId, memeId: parseInt(id) } }
+      where: { userId_memeId: { userId, memeId } }
     });
 
     if (existing) {
@@ -37,7 +43,7 @@ router.post("/:id/like", authenticateToken, async (req, res) => {
       return res.json({ message: "Meme unliked" });
     } else {
       await prisma.userLikesMeme.create({
-        data: { userId: req.user.userId, memeId: parseInt(id) }
+        data: { userId, memeId }
       });
       return res.json({ message: "Meme liked" });
     }
