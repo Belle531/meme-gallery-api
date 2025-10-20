@@ -1,12 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { memeSchema } from "../validation.js";
+import { memeSchema } from "./validation.js";
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
-export const register = async (req, res) => {
+import type { Request, Response } from "express";
+export const register = async (req: Request, res: Response) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password required' });
@@ -18,14 +19,15 @@ export const register = async (req, res) => {
     });
     res.status(201).json({ id: user.id, username: user.username });
   } catch (error) {
-    if (error.code === 'P2002') {
+    const err = error as any;
+    if (err.code === 'P2002') {
       return res.status(409).json({ error: 'Username already exists' });
     }
     res.status(500).json({ error: 'Registration failed' });
   }
 };
 
-export const login = async (req, res) => {
+export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password required' });
@@ -46,8 +48,8 @@ export const login = async (req, res) => {
   }
 }
 
-export const getUserMemes = async (req, res) => {
-  const { id } = req.params;
+export const getUserMemes = async (req: Request, res: Response) => {
+  const id = req.params.id ?? "";
   try {
     const userWithMemes = await prisma.user.findUnique({
       where: { id: parseInt(id) },
@@ -64,7 +66,7 @@ export const getUserMemes = async (req, res) => {
 };
 
 
-export const getMemes = async (req, res) => {
+export const getMemes = async (req: Request, res: Response) => {
   try {
     const memes = await prisma.meme.findMany({ include: { user: true } });
     res.json(memes);
@@ -74,8 +76,8 @@ export const getMemes = async (req, res) => {
 };
 
 
-export const getMemeById = async (req, res) => {
-  const { id } = req.params;
+export const getMemeById = async (req: Request, res: Response) => {
+  const id = req.params.id ?? "";
   try {
     const meme = await prisma.meme.findUnique({
       where: { id: parseInt(id) },
@@ -89,12 +91,13 @@ export const getMemeById = async (req, res) => {
 };
 
 
-export const createMeme = async (req, res) => {
+export const createMeme = async (req: Request, res: Response) => {
   const parseResult = memeSchema.safeParse(req.body);
   if (!parseResult.success) {
-    return res.status(400).json({ error: parseResult.error.errors[0].message });
+    const firstIssue = parseResult.error.issues?.[0]?.message || "Validation error";
+    return res.status(400).json({ error: firstIssue });
   }
-  const userId = req.user.userId;
+  const userId = (req as any).user.userId;
   try {
     const newMeme = await prisma.meme.create({
       data: { ...req.body, userId }
@@ -106,8 +109,8 @@ export const createMeme = async (req, res) => {
 };
 
 
-export const updateMeme = async (req, res) => {
-  const { id } = req.params;
+export const updateMeme = async (req: Request, res: Response) => {
+  const id = req.params.id ?? "";
   const { title, url } = req.body;
   try {
     const meme = await prisma.meme.update({
@@ -121,8 +124,8 @@ export const updateMeme = async (req, res) => {
 };
 
 
-export const deleteMeme = async (req, res) => {
-  const { id } = req.params;
+export const deleteMeme = async (req: Request, res: Response) => {
+  const id = req.params.id ?? "";
   try {
     const deleted = await prisma.meme.delete({
       where: { id: parseInt(id) }

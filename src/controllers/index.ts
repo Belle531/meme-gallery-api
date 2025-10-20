@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { Meme } from "../../types";
-import { memeSchema } from "./validation";
+import type { Request, Response } from "express";
+import type { Meme } from "../../types/index.js";
+import { memeSchema } from "./validation.js";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -28,12 +28,6 @@ app.use(express.json());
 
 app.use("/memes", memeRoutes);
 
-export interface Meme {
-  id?: number;
-  title: string;
-  url: string;
-  userId?: number;
-}
 
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

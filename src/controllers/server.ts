@@ -21,7 +21,7 @@ const pool = new Pool({
     user: process.env.PGUSER,
     password: process.env.PGPASSWORD,
     database: process.env.PGDATABASE,
-    port: process.env.PGPORT,
+    port: process.env.PGPORT ? parseInt(process.env.PGPORT) : undefined,
     ssl: { rejectUnauthorized: false } // <-- change here
 });
 
@@ -29,14 +29,15 @@ const pool = new Pool({
 app.use(express.json());
 
 // Logging middleware that runs on every request
-function logger(req, res, next) {
+import type { Request, Response, NextFunction } from "express";
+function logger(req: Request, res: Response, next: NextFunction) {
     console.log(`${req.method} ${req.url} at ${new Date().toISOString()}`);
     next();
 }
 app.use(logger);
 
 // Test database connection
-pool.connect((err, client, release) => {
+pool.connect((err: any, client: any, release: any) => {
     if (err) {
         console.error('Error connecting to PostgreSQL database:', err.stack);
     } else {
@@ -48,7 +49,7 @@ pool.connect((err, client, release) => {
 // --- ROUTES ---
 
 // Route handler for the root URL
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
     res.send('Meme Gallery API By Cassandra Moore ');
 });
 
@@ -56,7 +57,7 @@ app.use('/auth', authRoutes);
 app.use('/memes', memeRoutes);
 
 // Test route to verify error handling middleware works
-app.get("/error-test", (req, res, next) => {
+app.get("/error-test", (req: Request, res: Response, next: NextFunction) => {
     console.log("ERROR-TEST ROUTE HIT!");
     const error = new Error("Test error");
     console.log("About to call next(error)");
@@ -64,16 +65,16 @@ app.get("/error-test", (req, res, next) => {
 });
 
 // Error handling middleware for malformed JSON (moved to end)
-app.use((err, req, res, next) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     console.log("JSON ERROR HANDLER CALLED, error type:", err.constructor.name);
-    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    if (err instanceof SyntaxError && (err as any).status === 400 && 'body' in err) {
         return res.status(400).json({ error: 'Invalid JSON format in request body' });
     }
     next(err);
 });
 
 // General error-handling middleware (catches all other errors)
-app.use((err, req, res, next) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     console.log("ERROR HANDLER CALLED!");
     console.error(err.stack);
     res.status(500).json({ error: "Something went wrong!" });
@@ -96,16 +97,21 @@ const sampleUserData = {
 // --- LIKE/UNLIKE MEME ROUTE ---
 import { authenticateToken } from "./authController.js";
 import { PrismaClient } from "@prisma/client";
+import { memeSchema as likeSchema } from "./validation.js";
 const prisma = new PrismaClient();
 
-app.post("/memes/:id/like", authenticateToken, async (req, res) => {
-    const { id } = req.params;
-    const { error } = likeSchema.validate({ userId: req.user.userId });
-    if (error) return res.status(400).json({ error: error.details[0].message });
+app.post("/memes/:id/like", authenticateToken, async (req: Request, res: Response) => {
+    const id = req.params.id ?? "";
+    const userId = (req as any).user?.userId;
+    const parseResult = likeSchema.safeParse({ userId });
+    if (!parseResult.success) {
+        const firstIssue = parseResult.error.issues?.[0]?.message || "Validation error";
+        return res.status(400).json({ error: firstIssue });
+    }
 
     try {
         const existing = await prisma.userLikesMeme.findUnique({
-            where: { userId_memeId: { userId: req.user.userId, memeId: parseInt(id) } }
+            where: { userId_memeId: { userId, memeId: parseInt(id) } }
         });
 
         if (existing) {
@@ -113,7 +119,7 @@ app.post("/memes/:id/like", authenticateToken, async (req, res) => {
             return res.json({ message: "Meme unliked" });
         } else {
             await prisma.userLikesMeme.create({
-                data: { userId: req.user.userId, memeId: parseInt(id) }
+                data: { userId, memeId: parseInt(id) }
             });
             return res.json({ message: "Meme liked" });
         }
