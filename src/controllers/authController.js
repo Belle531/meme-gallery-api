@@ -3,7 +3,7 @@ export function authenticateToken(req, res, next) {
     const token = authHeader && authHeader.split(" ")[1];
     if (!token)
         return res.sendStatus(401);
-    jwt.verify(token, JWT_SECRET, (err, user) => {
+    jwt.verify(token, "secretkey", (err, user) => {
         if (err)
             return res.sendStatus(403);
         req.user = user;
@@ -48,7 +48,7 @@ export const login = async (req, res) => {
     const valid = await bcrypt.compare(password, user.password);
     if (!valid)
         return res.status(401).json({ error: "Invalid credentials" });
-    const token = jwt.sign({ userId: user.id, role: user.role || "regular" }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
     res.json({ token });
 };
 //# sourceMappingURL=authController.js.map
