@@ -46,7 +46,7 @@ SELECT * FROM memes WHERE user_id = 1;
 
 -- Get memes created in the last day
 SELECT * FROM memes 
-WHERE created_at >= NOW() - INTERVAL '1 day'
+WHERE created_at >= DATEADD(day, -1, GETDATE())
 ORDER BY created_at DESC;
 
 -- Count total memes per user
@@ -60,7 +60,7 @@ ORDER BY meme_count DESC;
 
 -- Search memes by title
 SELECT * FROM memes 
-WHERE title ILIKE '%cat%'
+WHERE title LIKE '%cat%'
 ORDER BY created_at DESC;
 
 -- ========================================
@@ -101,45 +101,4 @@ DELETE FROM memes WHERE user_id = 3;
 -- Delete a user (this will cascade and delete all their memes due to foreign key constraint)
 DELETE FROM users WHERE id = 3;
 
--- ========================================
--- ADVANCED QUERIES FOR TESTING
--- ========================================
 
--- Get memes with pagination (LIMIT and OFFSET)
-SELECT * FROM memes 
-ORDER BY created_at DESC 
-LIMIT 5 OFFSET 0;
-
--- Get the most recent meme for each user
-SELECT DISTINCT ON (user_id) 
-    user_id, 
-    title, 
-    url, 
-    created_at
-FROM memes
-ORDER BY user_id, created_at DESC;
-
--- Find users who haven't created any memes
-SELECT u.* FROM users u
-LEFT JOIN memes m ON u.id = m.user_id
-WHERE m.id IS NULL;
-
--- Get average number of memes per user
-SELECT AVG(meme_count) as avg_memes_per_user
-FROM (
-    SELECT user_id, COUNT(*) as meme_count
-    FROM memes
-    GROUP BY user_id
-) subquery;
-
--- ========================================
--- CLEANUP OPERATIONS (for testing)
--- ========================================
-
--- Remove all test data (use with caution!)
--- DELETE FROM memes;
--- DELETE FROM users;
-
--- Reset auto-increment sequences (PostgreSQL specific)
--- ALTER SEQUENCE users_id_seq RESTART WITH 1;
--- ALTER SEQUENCE memes_id_seq RESTART WITH 1;
