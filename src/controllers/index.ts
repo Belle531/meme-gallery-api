@@ -2,7 +2,7 @@ import express from "express";
 import type { Request, Response } from "express";
 import { memeSchema } from "./validation.js";
 import { PrismaClient } from "@prisma/client";
-import memeRoutes from "../../routes/memeRoutes.js";
+import memeRoutes from "../routes/memeRoutes.js";
 
 const prisma = new PrismaClient();
 
