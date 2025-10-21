@@ -1,5 +1,4 @@
 import type { Request, Response } from "express";
-import type { Meme } from "../../types/index.js";
 import { memeSchema } from "./validation.js";
 import { PrismaClient } from "@prisma/client";
 
@@ -14,8 +13,7 @@ export const addMeme = async (request: Request, response: Response) => {
   }
 
   const newMeme = await prisma.meme.create({
-    // @ts-ignore
-    data: { title, url, userId: parseInt((request as any).user.userId) } as Meme, // use authenticated userID
+    data: { title, url, userId: parseInt((request as any).user.userId) }, // use authenticated userID
   });
 
   response.status(201).json(newMeme);

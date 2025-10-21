@@ -3,8 +3,8 @@
 import express from 'express';
 import pkg from 'pg';
 import dotenv from 'dotenv';
-import authRoutes from '../../routes/authRoutes.js';
-import memeRoutes from '../../routes/memeRoutes.js';
+import authRoutes from '../../routes/authRoutes.ts';
+import memeRoutes from '../../routes/memeRoutes.ts';
 
 // Load environment variables
 dotenv.config();

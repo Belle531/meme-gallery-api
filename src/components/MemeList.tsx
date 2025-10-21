@@ -1,17 +1,9 @@
-import React from "react";
-import { Meme } from "../types/index.js";
+// This file previously contained React code for MemeList.
+// Refactored: No React code. You can implement a plain TypeScript utility or remove this file if not needed.
 
-interface MemeListProps<T> {
-  items: T[];
-  renderItem: (item: T) => React.ReactNode;
-}
+// Example: TypeScript-only meme list utility
+import type { Meme } from "../types/index.js";
 
-export function MemeList<T extends Meme>({ items, renderItem }: MemeListProps<T>) {
-  return (
-    <div>
-      {items.map((item) => (
-        <div key={item.id}>{renderItem(item)}</div>
-      ))}
-    </div>
-  );
+export function getMemeTitles(memes: Meme[]): string[] {
+  return memes.map(meme => meme.title);
 }
