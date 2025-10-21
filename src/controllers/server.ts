@@ -91,7 +91,7 @@ app.listen(PORT, () => {
 const sampleUserData = {
   "username": "testuser",
   "password": "testpassword"
-};
+ };
 
 
 // --- LIKE/UNLIKE MEME ROUTE ---

@@ -1,6 +1,6 @@
 import express from "express";
-import { getMemes, getMemeById, createMeme, updateMeme, deleteMeme, getUserMemes } from "../src/controllers/memeController.js";
-import { authenticateToken } from "../src/controllers/authController.js";
+import { getMemes, getMemeById, createMeme, updateMeme, deleteMeme, getUserMemes } from "../controllers/memeController.js";
+import { authenticateToken } from "../controllers/authController";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import type { Request, Response } from "express";
