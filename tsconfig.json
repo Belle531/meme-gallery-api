@@ -36,9 +36,9 @@
 
     // Recommended Options
     "strict": true,
-    "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
+    "moduleResolution": "nodenext",
     "moduleDetection": "force",
     "skipLibCheck": true
   },
