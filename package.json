@@ -4,11 +4,11 @@
   "description": "A REST API for managing memes with PostgreSQL database, deployable on Render",
   "main": "dist/controllers/server.js",
   "type": "module",
-"scripts": {
-  "build": "tsc -p tsconfig.json",
-  "dev": "nodemon --watch src --exec 'node --loader ts-node/esm src/controllers/server.ts --no-warnings'",
-  "start": "node dist/controllers/server.js"
-},
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "nodemon --watch src --exec 'node --loader ts-node/esm src/controllers/server.ts --no-warnings'",
+    "start": "node dist/controllers/server.js"
+  },
   "keywords": [
     "api",
     "memes",
@@ -34,6 +34,7 @@
     "@types/node": "^24.9.0",
     "@types/pg": "^8.15.5",
     "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
     "netlify-cli": "^17.38.1",
     "nodemon": "^3.1.10",
     "prisma": "^6.17.1",
