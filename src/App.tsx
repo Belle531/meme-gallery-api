@@ -1,5 +1,5 @@
-import { MemeList } from "./components/MemeList";
-import { Meme } from "./types";
+import { MemeList } from "../src/components/MemeList";
+import { Meme } from "./types.js";
 
 const memes: Meme[] = [
   { id: 1, title: "Distracted Boyfriend", url: "https://i.imgur.com/example1.jpg", userId: 1 },

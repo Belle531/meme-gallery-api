@@ -1,6 +1,6 @@
 // This file will be replaced by a generic React component implementation.
 import React from "react";
-import { Meme } from "../types";
+import { Meme } from "../types.js";
 
 interface MemeListProps<T> {
   items: T[];
