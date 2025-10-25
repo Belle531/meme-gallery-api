@@ -1,4 +1,4 @@
-import { MemeList } from "../src/components/MemeList";
+import { MemeList } from "./components/MemeList";
 import { Meme } from "./types.js";
 
 const memes: Meme[] = [
