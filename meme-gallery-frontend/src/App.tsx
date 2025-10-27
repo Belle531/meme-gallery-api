@@ -1,35 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { MemeList } from "./MemeList";
+import type { Meme } from "./types";
 
-function App() {
-  const [count, setCount] = useState(0)
+const memes: Meme[] = [
+  { id: 1, title: "Distracted Boyfriend", url: "https://i.imgur.com/example1.jpg", userId: 1 },
+  { id: 2, title: "Success Kid", url: "https://i.imgur.com/example2.jpg", userId: 1 }
+];
 
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <MemeList
+      items={memes}
+      renderItem={(meme: Meme) => (
+        <div>
+          <h3>{meme.title}</h3>
+          <img src={meme.url} alt={meme.title} width="200" />
+        </div>
+      )}
+    />
+  );
 }
-
-export default App
