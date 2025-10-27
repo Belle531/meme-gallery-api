@@ -221,9 +221,6 @@ const result = await pool.query('SELECT * FROM memes');
 
 ```css
 /* Key CSS Variables */
---primary-bg: #3107ee;           /* Main background */
---container-bg: rgb(201, 196, 235); /* Content area */
---font-stack: 'Courier New', Monaco, monospace; /* Developer fonts */
 
 # 🎭 Meme Gallery API
 
@@ -334,7 +331,7 @@ json
 - **DELETE** `/memes/:id` - Delete a meme
 - **GET** `/error-test` - Test error handling middleware
 
-**Local:** `http://localhost:3000/`  
+**Local:** `http://localhost:8080/`  
 **Production:** `https://your-app-name.onrender.com/`
 
 ## 🎨 Landing Page Design
@@ -360,14 +357,11 @@ The API includes a custom-designed landing page at the root URL with enhanced vi
 
 ```css
 /* Key CSS Variables */
---primary-bg: #3107ee;           /* Main background */
---container-bg: rgb(201, 196, 235); /* Content area */
---font-stack: 'Courier New', Monaco, monospace; /* Developer fonts */
 ```
 
 ### **Access Points:**
 
-- **Local Development**: `http://localhost:3000/`
+- **Local Development**: `http://localhost:8080/`
 - **Production**: `https://meme-gallery-api.netlify.app/`
 
 ## 📋 Request/Response Format
@@ -416,7 +410,7 @@ The API includes a custom-designed landing page at the root URL with enhanced vi
    ```
 
 4. **Test the API**
-   - Server runs at `http://localhost:3000`
+  - Server runs at `http://localhost:8080`
    - Use Postman or curl to test endpoints
 
 ## 🚀 Deployment
@@ -660,7 +654,7 @@ Client Request → Express Server → PostgreSQL Database → JSON Response
 **"404 Not Found on /api/memes"*
 
 - Ensure you're using the correct URL format
-- Local: `http://localhost:3000/memes` (Express) or `http://localhost:8888/api/memes` (Netlify Dev)
+- Local: `http://localhost:8080/memes` (Express) or `http://localhost:8888/api/memes` (Netlify Dev)
 - Production: `https://your-site.netlify.app/api/memes`
 
 **CORS Errors
