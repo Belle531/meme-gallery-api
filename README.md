@@ -1,3 +1,209 @@
+# Meme Gallery API
+
+A RESTful API for managing memes, users, and likes. Built with Node.js, Express, PostgreSQL, Prisma ORM, JWT authentication, Zod validation, and TypeScript. Includes a Vite-powered React frontend.
+
+## Features
+
+- User registration and login (JWT authentication)
+- CRUD operations for memes
+- Like/unlike memes (many-to-many relationship)
+- Input validation with Zod
+- Strongly-typed backend and frontend (TypeScript)
+- Prisma ORM for database modeling
+- Comprehensive API documentation
+- Ready for deployment (Netlify, Vercel, AWS, etc.)
+
+## Project Structure
+
+```text
+meme-gallery-api/
+├── controllers/
+├── routes/
+├── prisma/
+│   ├── schema.prisma
+│   └── migrations/
+├── validation.js
+├── server.js
+├── index.js
+├── package.json
+├── tsconfig.json
+├── .env.example
+├── README.md
+└── ...
+```
+
+## Local Setup
+
+1. Clone the repository
+  ```bash
+  git clone https://github.com/Belle531/meme-gallery-api.git
+  cd meme-gallery-api
+  ```
+
+2. Install dependencies
+  ```bash
+  npm install
+  ```
+
+3. Configure environment variables
+  - Copy `.env.example` to `.env` and fill in your secrets.
+
+4. Generate Prisma client
+  ```bash
+  npx prisma generate
+  ```
+
+5. Run migrations
+  ```bash
+  npx prisma migrate dev
+  ```
+
+6. (Optional) Seed database
+  ```bash
+  node prisma/seed.js
+  ```
+
+7. Start the server
+  ```bash
+  npm start
+  ```
+
+## Deployment
+
+Deploy to Netlify, Vercel, or AWS. Set environment variables in your deployment dashboard. Example URLs:
+
+- Backend: `https://your-site-name.netlify.app/api`
+- Frontend: `https://your-site-name.netlify.app/`
+
+## API Endpoints
+
+### Auth
+
+#### Register
+`POST /api/register`
+
+Request body:
+```json
+{
+  "username": "testuser",
+  "password": "yourpassword"
+}
+```
+
+#### Login
+`POST /api/login`
+
+Request body:
+```json
+{
+  "username": "testuser",
+  "password": "yourpassword"
+}
+```
+
+Response:
+```json
+{
+  "token": "<JWT_TOKEN>"
+}
+```
+
+### Memes
+
+#### Get all memes
+`GET /api/memes`
+
+#### Get meme by ID
+`GET /api/memes/:id`
+
+#### Create meme
+`POST /api/memes`
+
+Request body:
+```json
+{
+  "title": "Success Kid",
+  "url": "https://i.imgur.com/example2.jpg",
+  "userId": 1
+}
+```
+
+#### Update meme
+`PUT /api/memes/:id`
+
+Request body:
+```json
+{
+  "title": "Updated Meme Title"
+}
+```
+
+#### Delete meme
+`DELETE /api/memes/:id`
+
+### Likes
+
+#### Like a meme
+`POST /api/memes/:id/like`
+
+#### Unlike a meme
+`POST /api/memes/:id/unlike`
+
+## Example Requests
+
+```bash
+# GET all memes
+curl https://your-site-name.netlify.app/api/memes
+
+# GET single meme by ID
+curl https://your-site-name.netlify.app/api/memes/1
+
+# GET non-existent meme (404 test)
+curl https://your-site-name.netlify.app/api/memes/999
+
+# POST new meme
+curl -X POST https://your-site-name.netlify.app/api/memes \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Test Meme","url":"https://example.com/meme.jpg","userId":1}'
+
+# Test error handling
+curl -X POST https://your-site-name.netlify.app/api/memes \
+  -H "Content-Type: application/json" \
+  -d '{}'
+```
+
+## TypeScript & Coding Patterns
+
+```javascript
+// ES6 Modules
+import express from 'express';
+
+// Destructuring Assignment
+const { title, url, userId } = req.body;
+
+// Arrow Functions
+app.get("/memes", (req, res) => {
+  res.json(memes);
+});
+
+// Template Literals
+console.log(`Server running at http://localhost:${PORT}`);
+
+// Object Property Shorthand
+const newMeme = { id, title, url, userId };
+
+// Async/Await (in database version)
+const result = await pool.query('SELECT * FROM memes');
+```
+
+## Styling (Frontend)
+
+```css
+/* Key CSS Variables */
+--primary-bg: #3107ee;           /* Main background */
+--container-bg: rgb(201, 196, 235); /* Content area */
+--font-stack: 'Courier New', Monaco, monospace; /* Developer fonts */
+```
 # 🎭 Meme Gallery API
 
 A RESTful API for managing a meme gallery with user authentication, built with Express.js and PostgreSQL on AWS RDS.
