@@ -35,35 +35,42 @@ meme-gallery-api/
 ## Local Setup
 
 1. Clone the repository
+
   ```bash
   git clone https://github.com/Belle531/meme-gallery-api.git
   cd meme-gallery-api
   ```
 
-2. Install dependencies
+2.Install dependencies
+
   ```bash
   npm install
   ```
 
-3. Configure environment variables
-  - Copy `.env.example` to `.env` and fill in your secrets.
+3.Configure environment variables
 
-4. Generate Prisma client
+  -Copy `.env.example` to `.env` and fill in your secrets.
+
+4.Generate Prisma client
+
   ```bash
   npx prisma generate
   ```
 
-5. Run migrations
+5.Run migrations
+
   ```bash
   npx prisma migrate dev
   ```
 
-6. (Optional) Seed database
+6.(Optional) Seed database
+
   ```bash
   node prisma/seed.js
   ```
 
-7. Start the server
+7.Start the server
+
   ```bash
   npm start
   ```
@@ -80,9 +87,11 @@ Deploy to Netlify, Vercel, or AWS. Set environment variables in your deployment 
 ### Auth
 
 #### Register
+
 `POST /api/register`
 
 Request body:
+
 ```json
 {
   "username": "testuser",
@@ -91,9 +100,11 @@ Request body:
 ```
 
 #### Login
+
 `POST /api/login`
 
 Request body:
+
 ```json
 {
   "username": "testuser",
@@ -102,6 +113,7 @@ Request body:
 ```
 
 Response:
+
 ```json
 {
   "token": "<JWT_TOKEN>"
@@ -111,15 +123,19 @@ Response:
 ### Memes
 
 #### Get all memes
+
 `GET /api/memes`
 
 #### Get meme by ID
+
 `GET /api/memes/:id`
 
 #### Create meme
+
 `POST /api/memes`
 
 Request body:
+
 ```json
 {
   "title": "Success Kid",
@@ -129,9 +145,11 @@ Request body:
 ```
 
 #### Update meme
+
 `PUT /api/memes/:id`
 
 Request body:
+
 ```json
 {
   "title": "Updated Meme Title"
@@ -139,14 +157,17 @@ Request body:
 ```
 
 #### Delete meme
+
 `DELETE /api/memes/:id`
 
 ### Likes
 
 #### Like a meme
+
 `POST /api/memes/:id/like`
 
 #### Unlike a meme
+
 `POST /api/memes/:id/unlike`
 
 ## Example Requests
@@ -203,7 +224,7 @@ const result = await pool.query('SELECT * FROM memes');
 --primary-bg: #3107ee;           /* Main background */
 --container-bg: rgb(201, 196, 235); /* Content area */
 --font-stack: 'Courier New', Monaco, monospace; /* Developer fonts */
-```
+
 # 🎭 Meme Gallery API
 
 A RESTful API for managing a meme gallery with user authentication, built with Express.js and PostgreSQL on AWS RDS.

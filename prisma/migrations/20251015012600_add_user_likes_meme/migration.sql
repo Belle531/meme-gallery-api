@@ -11,7 +11,7 @@ CREATE TABLE "UserLikesMeme" (
 CREATE UNIQUE INDEX "UserLikesMeme_userId_memeId_key" ON "UserLikesMeme"("userId", "memeId");
 
 -- AddForeignKey
-ALTER TABLE "UserLikesMeme" ADD CONSTRAINT "UserLikesMeme_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserLikesMeme" ADD CONSTRAINT "UserLikesMeme_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserLikesMeme" ADD CONSTRAINT "UserLikesMeme_memeId_fkey" FOREIGN KEY ("memeId") REFERENCES "Meme"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserLikesMeme" ADD CONSTRAINT "UserLikesMeme_memeId_fkey" FOREIGN KEY ("memeId") REFERENCES "Meme"("id") ON DELETE NO ACTION ON UPDATE CASCADE;
