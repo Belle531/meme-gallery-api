@@ -66,9 +66,12 @@ export const getUserMemes = async (req: Request, res: Response) => {
 };
 
 
+
 export const getMemes = async (req: Request, res: Response) => {
   try {
-    const memes = await prisma.meme.findMany({ include: { user: true } });
+    const memes = await prisma.meme.findMany({
+      include: { user: { select: { id: true, username: true } } }
+    });
     res.json(memes);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch memes' });
@@ -76,12 +79,13 @@ export const getMemes = async (req: Request, res: Response) => {
 };
 
 
+
 export const getMemeById = async (req: Request, res: Response) => {
   const id = req.params.id ?? "";
   try {
     const meme = await prisma.meme.findUnique({
       where: { id: parseInt(id) },
-      include: { user: true }
+      include: { user: { select: { id: true, username: true } } }
     });
     if (!meme) return res.status(404).json({ error: 'Meme not found' });
     res.json(meme);

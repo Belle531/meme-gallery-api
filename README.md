@@ -409,9 +409,8 @@ The API includes a custom-designed landing page at the root URL with enhanced vi
    npm start
    ```
 
-4. **Test the API**
-  - Server runs at `http://localhost:8080`
-   - Use Postman or curl to test endpoints
+  -Server runs at `http://localhost:8080`
+   -Use Postman or curl to test endpoints
 
 ## 🚀 Deployment
 
