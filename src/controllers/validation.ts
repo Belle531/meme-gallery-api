@@ -1,6 +1,6 @@
 
 import { z } from "zod";
-import { Category } from "../types";
+import { Category } from "../types.js";
 
 export const memeSchema = z.object({
   title: z.string().min(3),
