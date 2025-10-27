@@ -1,5 +1,7 @@
 # Meme Gallery API
 
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/Belle531/meme-gallery-api)
+
 A RESTful API for managing memes, users, and likes. Built with Node.js, Express, PostgreSQL, Prisma ORM, JWT authentication, Zod validation, and TypeScript. Includes a Vite-powered React frontend.
 
 ## Features
@@ -79,8 +81,11 @@ meme-gallery-api/
 
 Deploy to Netlify, Vercel, or AWS. Set environment variables in your deployment dashboard. Example URLs:
 
-- Backend: `https://your-site-name.netlify.app/api`
-- Frontend: `https://your-site-name.netlify.app/`
+- Deploy to Netlify, Vercel, AWS, or Render. Set environment variables in your deployment dashboard.
+
+- GitHub Repository: [https://github.com/Belle531/meme-gallery-api.git](https://github.com/Belle531/meme-gallery-api.git)
+- Backend Example: `https://your-site-name.netlify.app/api` or your Render/other deployment URL
+- Frontend Example: `https://your-site-name.netlify.app/`
 
 ## API Endpoints
 

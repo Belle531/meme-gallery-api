@@ -102,9 +102,14 @@ export const createMeme = async (req: Request, res: Response) => {
     return res.status(400).json({ error: firstIssue });
   }
   const userId = (req as any).user.userId;
+  const { title, url, category } = parseResult.data;
   try {
     const newMeme = await prisma.meme.create({
-      data: { ...req.body, userId }
+      data: {
+        title,
+        url,
+        userId
+      }
     });
     res.status(201).json(newMeme);
   } catch (error) {

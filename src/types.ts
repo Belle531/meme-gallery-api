@@ -1,3 +1,9 @@
+export enum Category {
+  CLASSIC = "CLASSIC",
+  DANK = "DANK",
+  WHOLESOME = "WHOLESOME"
+}
+
 export interface User {
   id: number;
   username: string;
@@ -10,7 +16,7 @@ export interface Meme {
   title: string;
   url: string;
   userId: number;
-  category?: string;
+  category?: Category;
   createdAt?: string;
 }
 

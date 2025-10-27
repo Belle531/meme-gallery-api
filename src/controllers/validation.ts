@@ -1,8 +1,11 @@
+
 import { z } from "zod";
+import { Category } from "../types";
 
 export const memeSchema = z.object({
   title: z.string().min(3),
   url: z.string().url(),
+  category: z.nativeEnum(Category).optional()
 });
 
 export const userSchema = z.object({

@@ -21,13 +21,20 @@ model User {
   likes    UserLikesMeme[]
 }
 
+enum Category {
+  CLASSIC
+  DANK
+  WHOLESOME
+}
+
 model Meme {
-  id     Int    @id @default(autoincrement())
-  title  String
-  url    String
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int
-  likedBy UserLikesMeme[]
+  id       Int      @id @default(autoincrement())
+  title    String
+  url      String
+  userId   Int
+  user     User     @relation(fields: [userId], references: [id])
+  category Category @default(CLASSIC)
+  likedBy  UserLikesMeme[]
 }
 
 model UserLikesMeme {
