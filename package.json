@@ -5,9 +5,9 @@
   "main": "dist/controllers/server.js",
   "type": "module",
   "scripts": {
-  "build": "tsc -p tsconfig.json",
-  "dev": "nodemon --watch src --exec \"node --loader ts-node/esm src/controllers/server.ts --no-warnings\"",
-  "start": "node dist/controllers/server.js"
+    "build": "tsc -p tsconfig.json",
+    "dev": "nodemon --watch src --exec \"node --loader ts-node/esm src/controllers/server.ts --no-warnings\"",
+    "start": "node dist/controllers/server.js"
   },
   "keywords": [
     "api",

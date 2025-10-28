@@ -134,13 +134,21 @@ export const updateMeme = async (req: Request, res: Response) => {
 
 
 export const deleteMeme = async (req: Request, res: Response) => {
-  const id = req.params.id ?? "";
   try {
-    const deleted = await prisma.meme.delete({
-      where: { id: parseInt(id) }
-    });
-    res.json(deleted);
-  } catch (error) {
-    res.status(404).json({ error: 'Meme not found or failed to delete' });
+    const idParam = req.params.id;
+    if (!idParam || isNaN(Number(idParam))) {
+      return res.status(400).json({ error: "Invalid meme ID" });
+    }
+    const id: number = Number(idParam);
+
+    const meme = await prisma.meme.findUnique({ where: { id } });
+    if (!meme) {
+      return res.status(404).json({ error: "Meme not found" });
+    }
+
+    await prisma.meme.delete({ where: { id } });
+    return res.status(200).json({ message: "Meme deleted successfully", meme });
+  } catch (err) {
+    return res.status(500).json({ error: "Server error" });
   }
 };
